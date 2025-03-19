@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sslspy"
-version = "0.1.0"
+version = "1.0.0"
 description = "A comprehensive SSL/TLS security scanner for analyzing certificates, protocols, and security vulnerabilities."
 readme = "README.md"  # or a path to your README file
 license = { text = "MIT" }
