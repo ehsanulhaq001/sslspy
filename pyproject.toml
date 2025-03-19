@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sslspy"
+version = "0.1.0"
+description = "A comprehensive SSL/TLS security scanner for analyzing certificates, protocols, and security vulnerabilities."
+readme = "README.md"  # or a path to your README file
+license = { text = "MIT" }
+authors = [
+  { name = "Ehsan Ul Haq Khawja", email = "ehsanulhaqkhawja01@gmail.com" }
+]
+requires-python = ">=3.7"
+keywords = ["ssl", "tls", "certificate", "security", "scanner", "cipher", "protocol"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Security :: Cryptography",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: MIT License"
+]
+dependencies = [
+  "colorama>=0.4.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/ehsanulhaq001/sslspy"
+BugTracker = "https://github.com/ehsanulhaq001/sslspy/issues"
+
+
+[project.scripts]
+sslspy = "sslspy.cli:run_cli"
