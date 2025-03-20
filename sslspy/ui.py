@@ -39,9 +39,31 @@ def format_log_line(domain, status, days_left, error_msg):
         info = "Timeout"
     else:  # ERROR
         color = Fore.RED
-        info = error_msg if error_msg else "Unknown error"
+        # Truncate error message to fit in the remaining space
+        max_error_length = 25  # Adjust this value based on your box width
+        if error_msg:
+            if len(error_msg) > max_error_length:
+                info = error_msg[:max_error_length-3] + "..."
+            else:
+                info = error_msg
+        else:
+            info = "Unknown error"
 
-    return f"{color}{domain:<45} {status:<20} {info}{Style.RESET_ALL}"
+    # Calculate the total width needed for the line
+    # Box width is 100, we need 4 chars for borders and spaces
+    max_width = 96  # 100 - 4 (for borders and spaces)
+
+    # Calculate available space for each component
+    domain_width = 45
+    status_width = 20
+    info_width = max_width - domain_width - status_width - 2  # -2 for spaces between components
+
+    # Format each component with proper width
+    domain_part = f"{color}{domain:<{domain_width}}"
+    status_part = f"{status:<{status_width}}"
+    info_part = f"{info:<{info_width}}{Style.RESET_ALL}"
+
+    return f"{domain_part} {status_part} {info_part}"
 
 
 def draw_boxed_line(line: str, box_width: int) -> str:
