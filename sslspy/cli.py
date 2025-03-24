@@ -20,6 +20,7 @@ from sslspy.constants import (
     MAX_WORKERS,
     EXITING,
     PAUSED,
+    LOG_DISPLAY_LIMIT,
 )
 from sslspy.checker import check_domains
 from sslspy.ui import draw_ui, format_log_line, print_summary
@@ -216,9 +217,9 @@ def run_cli():
             # Log line
             line = format_log_line(domain, status, days_left, error_msg)
             stats["log_lines"].append(line)
-            if len(stats["log_lines"]) > 10:
-                # Keep only the last 10 lines
-                stats["log_lines"] = stats["log_lines"][-10:]
+            if len(stats["log_lines"]) > LOG_DISPLAY_LIMIT:
+                # Keep only the last LOG_DISPLAY_LIMIT lines
+                stats["log_lines"] = stats["log_lines"][-LOG_DISPLAY_LIMIT:]
 
             if args.no_fancy_ui:
                 # Simple progress output

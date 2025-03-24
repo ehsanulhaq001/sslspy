@@ -12,6 +12,12 @@ from sslspy.constants import (
     STATUS_TIMEOUT,
     STATUS_ERROR,
     MAX_LOG_LINES,
+    BOX_WIDTH,
+    DOMAIN_WIDTH,
+    STATUS_WIDTH,
+    MAX_ERROR_LENGTH,
+    PROGRESS_BAR_WIDTH,
+    STATS_ITEM_WIDTH,
 )
 from sslspy.utils import pad_line_ansi, strip_ansi_codes
 
@@ -40,27 +46,24 @@ def format_log_line(domain, status, days_left, error_msg):
     else:  # ERROR
         color = Fore.RED
         # Truncate error message to fit in the remaining space
-        max_error_length = 25  # Adjust this value based on your box width
         if error_msg:
-            if len(error_msg) > max_error_length:
-                info = error_msg[:max_error_length-3] + "..."
+            if len(error_msg) > MAX_ERROR_LENGTH:
+                info = error_msg[:MAX_ERROR_LENGTH-3] + "..."
             else:
                 info = error_msg
         else:
             info = "Unknown error"
 
     # Calculate the total width needed for the line
-    # Box width is 100, we need 4 chars for borders and spaces
-    max_width = 96  # 100 - 4 (for borders and spaces)
+    # Box width is BOX_WIDTH, we need 4 chars for borders and spaces
+    max_width = BOX_WIDTH - 4  # BOX_WIDTH - 4 (for borders and spaces)
 
     # Calculate available space for each component
-    domain_width = 45
-    status_width = 20
-    info_width = max_width - domain_width - status_width - 2  # -2 for spaces between components
+    info_width = max_width - DOMAIN_WIDTH - STATUS_WIDTH - 2  # -2 for spaces between components
 
     # Format each component with proper width
-    domain_part = f"{color}{domain:<{domain_width}}"
-    status_part = f"{status:<{status_width}}"
+    domain_part = f"{color}{domain:<{DOMAIN_WIDTH}}"
+    status_part = f"{status:<{STATUS_WIDTH}}"
     info_part = f"{info:<{info_width}}{Style.RESET_ALL}"
 
     return f"{domain_part} {status_part} {info_part}"
@@ -91,7 +94,7 @@ def draw_ui(
     """
     # Move cursor to top-left and clear screen
     sys.stdout.write("\033[H\033[J")
-    box_width = 100
+    box_width = BOX_WIDTH
 
     # Fancy banner at the top
     print(Fore.CYAN + Style.BRIGHT + "╔" + "═" * (box_width - 2) + "╗")
@@ -108,7 +111,7 @@ def draw_ui(
 
     # Calculate progress
     progress = (completed / total_domains) * 100 if total_domains else 0
-    bar_width = 70
+    bar_width = PROGRESS_BAR_WIDTH
     filled_length = int(bar_width * progress // 100)
 
     # Unicode block characters
@@ -129,11 +132,11 @@ def draw_ui(
 
     # Summaries
     summary_content = (
-        f"{Fore.GREEN}VALID: {valid_count:<5}{Style.RESET_ALL}"
-        f"{Fore.YELLOW}WARNING: {warning_count:<5}{Style.RESET_ALL}"
-        f"{Fore.RED}EXPIRED: {expired_count:<5}{Style.RESET_ALL}"
-        f"{Fore.RED}TIMEOUT: {timeout_count:<5}{Style.RESET_ALL}"
-        f"{Fore.RED}ERROR: {error_count:<5}{Style.RESET_ALL}"
+        f"{Fore.GREEN}VALID: {valid_count:<{STATS_ITEM_WIDTH}}{Style.RESET_ALL}"
+        f"{Fore.YELLOW}WARNING: {warning_count:<{STATS_ITEM_WIDTH}}{Style.RESET_ALL}"
+        f"{Fore.RED}EXPIRED: {expired_count:<{STATS_ITEM_WIDTH}}{Style.RESET_ALL}"
+        f"{Fore.RED}TIMEOUT: {timeout_count:<{STATS_ITEM_WIDTH}}{Style.RESET_ALL}"
+        f"{Fore.RED}ERROR: {error_count:<{STATS_ITEM_WIDTH}}{Style.RESET_ALL}"
     )
 
     # Calculate the visible length of the content (excluding ANSI codes)
@@ -198,7 +201,7 @@ def print_summary(results, execution_time):
             status_counts[status] += 1
 
     print()
-    border_line = Fore.CYAN + Style.BRIGHT + ("=" * 100) + Style.RESET_ALL
+    border_line = Fore.CYAN + Style.BRIGHT + ("=" * BOX_WIDTH) + Style.RESET_ALL
     print(border_line)
     print("Final Summary:")
     print(
