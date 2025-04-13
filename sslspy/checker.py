@@ -82,8 +82,12 @@ def check_domain(
         status = STATUS_TIMEOUT
         error_msg = "Connection timed out"
     except ssl.SSLError as e:
-        status = STATUS_ERROR
         error_msg = f"SSL error: {e}"
+        # Check if the error indicates an expired certificate
+        if "certificate has expired" in str(e):
+            status = STATUS_EXPIRED
+        else:
+            status = STATUS_ERROR
     except Exception as e:
         # Could be DNS error, refused connection, etc.
         status = STATUS_ERROR
