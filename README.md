@@ -2,6 +2,10 @@
 
 A comprehensive SSL/TLS security scanner for analyzing certificates, protocols, and security vulnerabilities.
 
+## Demo
+
+![SSLSpy Demo](demo.gif)
+
 ## Features
 
 - SSL/TLS certificate expiration checking
